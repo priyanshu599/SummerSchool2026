@@ -1,20 +1,31 @@
 int blinkCount = 0;
 
 void setup() {
+
   pinMode(13, OUTPUT);
+
   Serial.begin(9600);
+
 }
 
 void loop() {
 
-  digitalWrite(13, HIGH);
-  delay(500);
+  int sensorValue = analogRead(A0);
 
-  digitalWrite(13, LOW);
-  delay(500);
+  int delayTime = map(sensorValue,0,1023,100,1000);
+
+  digitalWrite(13,HIGH);
+  delay(delayTime);
+
+  digitalWrite(13,LOW);
+  delay(delayTime);
 
   blinkCount++;
 
   Serial.print("Blink count: ");
-  Serial.println(blinkCount);
+  Serial.print(blinkCount);
+
+  Serial.print(" Delay: ");
+  Serial.println(delayTime);
+
 }

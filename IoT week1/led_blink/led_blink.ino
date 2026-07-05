@@ -13,6 +13,7 @@ the blink count and delay value.
 */
 
 int blinkCount = 0;
+// Fixed potentiometer reading issue
 
 void setup() {
 

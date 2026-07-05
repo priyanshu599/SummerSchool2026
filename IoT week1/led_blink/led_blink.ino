@@ -1,3 +1,17 @@
+/*
+------------------------------------------------------
+Project      : LED Blink
+Author       : Priyanshu Yadav
+Roll Number  : IoT-029
+Date         : July 2026
+
+Description:
+LED blink project whose blinking speed is controlled
+using a potentiometer. The Serial Monitor displays
+the blink count and delay value.
+------------------------------------------------------
+*/
+
 int blinkCount = 0;
 
 void setup() {

@@ -156,4 +156,4 @@ Feedback and suggestions are always welcome.
 
 GitHub: https://github.com/priyanshu599
 
-LinkedIn: [www.linkedin.com/in/priyanshu-yadav-2773732a5](http://www.linkedin.com/in/priyanshu-yadav-2773732a5)
+LinkedIn: www.linkedin.com/in/priyanshurao98

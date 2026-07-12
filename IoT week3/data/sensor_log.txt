@@ -1,0 +1,24 @@
+========================
+Time      : 5000 ms
+Temp      : 28.4 C | Humidity: 63%
+Light     : 74% (Bright)
+Distance  : 42 cm
+========================
+========================
+Time      : 10000 ms
+Temp      : 28.5 C | Humidity: 64%
+Light     : 72% (Bright)
+Distance  : 40 cm
+========================
+========================
+Time      : 15000 ms
+Temp      : 28.6 C | Humidity: 63%
+Light     : 68% (Normal)
+Distance  : 38 cm
+========================
+========================
+Time      : 20000 ms
+Temp      : 28.7 C | Humidity: 62%
+Light     : 45% (Normal)
+Distance  : 36 cm
+========================

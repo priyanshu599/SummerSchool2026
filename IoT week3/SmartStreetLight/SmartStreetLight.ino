@@ -1,16 +1,59 @@
 /*
---------------------------------------
-Smart Street Lighting System
-ESP32
---------------------------------------
+-------------------------------------------------------
+Project      : Smart Street Light
+Author       : Priyanshu Yadav
+Roll Number  : 24BCA037
+
+Description:
+Smart Street Light using LDR + PIR Sensor on ESP32
+
+Features:
+• Daytime -> LED OFF
+• Night + Motion -> LED 100% Brightness
+• No Motion for 30 sec -> LED 20% Brightness
+• Event logging with timestamps
+-------------------------------------------------------
 */
 
-#define LDR_PIN 34
-#define PIR_PIN 27
-#define LIGHT_PIN 25
+#define LDR_PIN    34
+#define PIR_PIN    27
+#define LIGHT_PIN  25
 
-int ldrValue;
-int motion;
+const int threshold = 1500;
+
+// PWM Configuration
+const int pwmChannel = 0;
+const int pwmFreq = 5000;
+const int pwmResolution = 8;
+
+unsigned long motionTime = 0;
+bool motionDetected = false;
+
+void printTime() {
+
+  unsigned long totalSeconds = millis() / 1000;
+
+  int hh = (totalSeconds / 3600) % 24;
+  int mm = (totalSeconds / 60) % 60;
+  int ss = totalSeconds % 60;
+
+  Serial.print("[");
+
+  if (hh < 10) Serial.print("0");
+  Serial.print(hh);
+
+  Serial.print(":");
+
+  if (mm < 10) Serial.print("0");
+  Serial.print(mm);
+
+  Serial.print(":");
+
+  if (ss < 10) Serial.print("0");
+  Serial.print(ss);
+
+  Serial.print("] ");
+}
 
 void setup() {
 
@@ -18,47 +61,65 @@ void setup() {
 
   pinMode(PIR_PIN, INPUT);
 
-  pinMode(LIGHT_PIN, OUTPUT);
+  // ESP32 PWM
+  ledcSetup(pwmChannel, pwmFreq, pwmResolution);
+  ledcAttachPin(LIGHT_PIN, pwmChannel);
+
+  ledcWrite(pwmChannel, 0);
+
+  Serial.println("--------------------------------------");
+  Serial.println("Smart Street Lighting System");
+  Serial.println("--------------------------------------");
 
 }
 
 void loop() {
 
-  ldrValue = analogRead(LDR_PIN);
+  int ldrValue = analogRead(LDR_PIN);
+  int motion = digitalRead(PIR_PIN);
 
-  motion = digitalRead(PIR_PIN);
+  // ---------- DAYTIME ----------
+  if (ldrValue > threshold) {
 
-  Serial.print("Light : ");
-  Serial.print(ldrValue);
+    ledcWrite(pwmChannel, 0);
 
-  Serial.print(" Motion : ");
-  Serial.println(motion);
+    motionDetected = false;
 
-  if (ldrValue < 1500) {
+    printTime();
+    Serial.println("EVENT: Daylight detected - Street Light OFF");
 
-    if (motion == HIGH) {
+    delay(1000);
+    return;
+  }
 
-      digitalWrite(LIGHT_PIN, HIGH);
+  // ---------- NIGHT ----------
+  if (motion == HIGH) {
 
-      Serial.println("Street Light ON");
-    }
+    ledcWrite(pwmChannel, 255);      // 100% Brightness
 
-    else {
+    motionDetected = true;
 
-      digitalWrite(LIGHT_PIN, LOW);
+    motionTime = millis();
 
-      Serial.println("No Motion");
-    }
+    printTime();
+    Serial.println("EVENT: Motion detected - LED Full Brightness");
 
   }
 
-  else {
+  // ---------- NO MOTION ----------
+  if (motionDetected) {
 
-    digitalWrite(LIGHT_PIN, LOW);
+    if (millis() - motionTime >= 30000) {
 
-    Serial.println("Day Time");
+      ledcWrite(pwmChannel, 51);     // 20% Brightness
+
+      motionDetected = false;
+
+      printTime();
+      Serial.println("EVENT: No Motion - LED Dimmed to 20%");
+
+    }
+
   }
-
-  delay(1000);
 
 }
